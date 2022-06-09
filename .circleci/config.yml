@@ -162,7 +162,7 @@ jobs:
 
   configure-infrastructure:
     docker:
-      - image: python:3.7-alpine3.11
+      - image: amazon/aws-cli
     steps:
       - checkout
       - add_ssh_keys:
@@ -170,9 +170,9 @@ jobs:
       - attach_workspace:
           at: .circleci/ansible
       - run:
-          name: Install dependencies
+          name: Installing packages
           command: |
-            apk add --update ansible openssh
+            yum -y install tar gzip ansible
       - run:
           name: Check inventory
           command: |
