@@ -155,6 +155,7 @@ jobs:
           root: ~/
           paths:
             - project/.circleci/ansible/inventory.txt
+      -run 
       - destroy-environment
 
   configure-infrastructure:
@@ -165,7 +166,7 @@ jobs:
       - add_ssh_keys:
           fingerprints: ["2c:f0:2b:d6:b3:7c:60:98:d4:f4:86:e4:cc:74:1c:55"]
       - attach_workspace:
-          at: ./project/.circleci/ansible
+          at: ~/
       - run:
           name: Install dependencies
           command: |
@@ -174,7 +175,8 @@ jobs:
           name: Configure server
           command: |
             cd .circleci/ansible
-            ansible-playbook -i inventory.txt configure-server.yml
+            ansible-playbook -i ~/project/.circleci/ansible/inventory.txt configure-server.yml
+            ./project/.circleci/ansible
       - destroy-environment
 
 workflows:
