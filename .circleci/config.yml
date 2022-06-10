@@ -223,15 +223,15 @@ jobs:
           command: |
             apk add --update ansible openssh aws-cli npm
       - run:
-          name: Get frontend url
+          name: Get backend url
           command: |
             export BACKEND_IP=$(aws ec2 describe-instances \
               --query 'Reservations[*].Instances[*].PublicIpAddress' \
               --filters "Name=tag:Project,Values=udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
               --output text)
             export API_URL="http://${BACKEND_IP}:3030"
-            echo API_URL="http://${BACKEND_IP}:3030" >> frontend/.env
-            cat frontend/.env
+            echo API_URL="http://${BACKEND_IP}:3030" >> backend/.env
+            cat backend/.env
       - run:
           name: Deploy frontend objects
           command: |
@@ -240,7 +240,11 @@ jobs:
             npm run build
             tar -czvf artifact-"${CIRCLE_WORKFLOW_ID:0:7}".tar.gz dist
             aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
-            # - destroy-environment
+      - persist_to_workspace:
+         root: .
+         paths:
+           - backend/.env
+      #- destroy-environment
 
   deploy-backend:
     docker:
