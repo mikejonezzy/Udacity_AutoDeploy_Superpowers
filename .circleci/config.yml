@@ -244,7 +244,7 @@ jobs:
          root: .
          paths:
            - backend/.env
-      #- destroy-environment
+       #- destroy-environment
 
   deploy-backend:
     docker:
@@ -272,7 +272,7 @@ jobs:
             echo "Contents  of the inventory.txt file is -------"
             cat inventory.txt
             ansible-playbook -i inventory.txt deploy-backend.yml
-            # - destroy-environment
+      #- destroy-environment
 
   smoke-test:
     docker:
@@ -284,18 +284,32 @@ jobs:
           command: |
             apk add --update ansible openssh aws-cli npm curl
       - run:
-          name: Get backend url
-          command: |
-            # your code here
-      - run:
           name: Backend smoke test.
           command: |
-            # your code here
+            export BACKEND_IP=$(aws ec2 describe-instances \
+              --query 'Reservations[*].Instances[*].PublicIpAddress' \
+              --filters "Name=tag:Project,Values=udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
+              --output text)
+            export API_URL="http://${BACKEND_IP}:3030"
+            echo "${API_URL}"
+            if curl "${API_URL}/api/status" | grep "ok"
+            then
+                return 0
+            else
+                return 1
+            fi
       - run:
           name: Frontend smoke test.
           command: |
-            # your code here
-      - destroy-environment
+            URL="http://udapeople-${CIRCLE_WORKFLOW_ID:0:7}.s3-website-us-east-1.amazonaws.com/#/employees"            
+            echo ${URL} 
+            if curl -s ${URL} | grep "Welcome"
+            then
+                # Change this to 0 after the job fails
+              return 1
+            else
+              return 1
+            fi
 
 workflows:
   default:
