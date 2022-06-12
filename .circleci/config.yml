@@ -117,7 +117,6 @@ jobs:
           paths: [backend/node_modules]
           key: backend-scan
 
-
   deploy-infrastructure:
     docker:
       - image: amazon/aws-cli
