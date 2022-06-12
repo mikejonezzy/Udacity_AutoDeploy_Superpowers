@@ -1,7 +1,7 @@
 - name: "synch zipped artifact"
   synchronize:
     src: ../../backend
-    dest: /tmp
+    dest: /home/ubuntu
     recursive: true
 - name: "start app"
   shell: |
