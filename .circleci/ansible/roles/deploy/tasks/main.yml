@@ -5,7 +5,7 @@
     recursive: true
 - name: "start app"
   shell: |
-    cd /tmp/backend
+    cd /home/ubuntu/backend
     npm install
     pm2 stop default
     pm2 start npm -- start
