@@ -263,7 +263,7 @@ jobs:
           command: |
             env | awk '/TYPEORM/' | tee -a backend/.env
             echo "Contents  of the dotenv file is -------"
-            cat .env
+            cat backend/.env
             cd backend
             npm i
             npm run build
