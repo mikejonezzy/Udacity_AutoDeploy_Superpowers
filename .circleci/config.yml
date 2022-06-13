@@ -21,8 +21,6 @@ commands:
     parameters:
       workflow_id:
         type: string
-    parameters:
-      # Add parameter here     
     steps:
       - run:
           name: Revert migrations
