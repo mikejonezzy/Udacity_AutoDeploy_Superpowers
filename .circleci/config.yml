@@ -222,15 +222,15 @@ jobs:
           command: |
             apk add --update ansible openssh aws-cli npm
       - run:
-          name: Get backend url
+          name: Add backend url to dotenv
           command: |
             export BACKEND_IP=$(aws ec2 describe-instances \
               --query 'Reservations[*].Instances[*].PublicIpAddress' \
               --filters "Name=tag:Project,Values=udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
               --output text)
             export API_URL="http://${BACKEND_IP}:3030"
-            echo API_URL="http://${BACKEND_IP}:3030" >> backend/.env
-            cat backend/.env
+            echo API_URL="http://${BACKEND_IP}:3030" >> frontend/.env
+            cat frontend/.env
       - run:
           name: Deploy frontend objects
           command: |
@@ -261,6 +261,9 @@ jobs:
       - run:
           name: Deploy backend objects
           command: |
+            env | awk '/TYPEORM/' | tee -a backend/.env
+            echo "Contents  of the dotenv file is -------"
+            cat .env
             cd backend
             npm i
             npm run build
