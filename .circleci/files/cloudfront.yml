@@ -8,7 +8,7 @@ Parameters:
 
 
 Resources:
-  
+intentional job failure  
   CloudFrontOriginAccessIdentity:
     Type: "AWS::CloudFront::CloudFrontOriginAccessIdentity"
     Properties:
